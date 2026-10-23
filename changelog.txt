@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2026-10-23
+  Bugfixes:
+    - Remove obsolete prototype/style fields reported unused by Factorio 2.1.
+    - Use current fluid storage reads and named-fluid extraction for tank trading.
+    - Use helpers file APIs in the debug logger.
+    - Account for independent/shared recipe probabilities and fractional output in prices.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2026-10-23
   Compatibility:

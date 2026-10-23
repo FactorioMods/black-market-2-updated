@@ -48,8 +48,7 @@ default_gui.frame_blkmkt_style =
 	right_padding = 0,
 	bottom_padding = 0,
 	left_padding = 0,
-	resize_row_to_width = true,
-	resize_to_row_height = false,
+
 	-- max_on_row = 1,
 }
 
@@ -61,14 +60,9 @@ default_gui.vertical_flow_blkmkt_style =
 	bottom_padding = 0,
 	left_padding = 0,
 	right_padding = 0,
-	
-	horizontal_spacing = 2,
+
 	vertical_spacing = 2,
-	resize_row_to_width = true,
-	resize_to_row_height = false,
-	max_on_row = 1,
-	
-	graphical_set = { type = "none" },
+
 }
 
 default_gui.horizontal_flow_blkmkt_style = 
@@ -81,12 +75,7 @@ default_gui.horizontal_flow_blkmkt_style =
 	right_padding = 0,
 	
 	horizontal_spacing = 2,
-	vertical_spacing = 2,
-	resize_row_to_width = true,
-	resize_to_row_height = false,
-	max_on_row = 1,
-	
-	graphical_set = { type = "none" },
+
 }
 
 default_gui.table_blkmkt_style =
@@ -94,9 +83,7 @@ default_gui.table_blkmkt_style =
 	type = "table_style",
 	horizontal_spacing = 5,
 	vertical_spacing = 2,
-	resize_row_to_width = true,
-	resize_to_row_height = false,
-	max_on_row = 1,
+
 }
 
 --------------------------------------------------------------------------------------
@@ -105,8 +92,7 @@ default_gui.label_blkmkt_style =
 	type="label_style",
 	parent="label",
 	font="font_blkmkt",
-	align = "left",
-	default_font_color={r=1, g=1, b=1},
+
 	hovered_font_color={r=1, g=1, b=1},
 	top_padding = 1,
 	right_padding = 1,
@@ -119,7 +105,7 @@ default_gui.label_bold_blkmkt_style =
 	type="label_style",
 	parent="label_blkmkt_style",
 	font="font_bold_blkmkt",
-	default_font_color={r=1, g=1, b=0.5},
+
 	hovered_font_color={r=1, g=1, b=0.5},
 }
 
@@ -127,10 +113,9 @@ default_gui.textfield_blkmkt_style =
 {
     type = "textbox_style",
 	font="font_bold_blkmkt",
-	align = "left",
+
     font_color = {},
-	default_font_color={r=1, g=1, b=1},
-	hovered_font_color={r=1, g=1, b=1},
+
     selection_background_color= {r=0.66, g=0.7, b=0.83},
 	top_padding = 0,
 	bottom_padding = 0,
@@ -138,14 +123,6 @@ default_gui.textfield_blkmkt_style =
 	right_padding = 1,
 	minimal_width = math.floor(50 * gui_scale),
 	maximal_width = math.floor(200 * gui_scale),
-	graphical_set =
-	{
-		type = "composition",
-		filename = "__core__/graphics/gui.png",
-		priority = "extra-high-no-scale",
-		corner_size = {3, 3},
-		position = {16, 0}
-	},
 }    
 
 default_gui.checkbox_blkmkt_style =
@@ -167,7 +144,7 @@ default_gui.button_blkmkt_style =
 	type="button_style",
 	parent="button",
 	font="font_bold_blkmkt",
-	align = "center",
+
 	default_font_color={r=1, g=1, b=1},
 	hovered_font_color={r=1, g=1, b=1},
 	top_padding = 0,
@@ -187,21 +164,11 @@ default_gui.dropdown_blkmkt_style =
 {
 	type="dropdown_style",
 	parent="dropdown",
-	font="font_bold_blkmkt",
-	align = "center",
-	default_font_color={r=1, g=1, b=1},
-	hovered_font_color={r=1, g=1, b=1},
+
 	top_padding = 0,
 	right_padding = 0,
 	bottom_padding = 0,
 	left_padding = 0,
-	left_click_sound =
-	{
-		{
-		  filename = "__core__/sound/gui-click.ogg",
-		  volume = 1
-		}
-	},
 }
 
 default_gui.button_blkmkt_credits_style = 
@@ -209,7 +176,7 @@ default_gui.button_blkmkt_credits_style =
 	type="button_style",
 	parent="button",
 	font="font_bold_blkmkt",
-	align = "center",
+
 	default_font_color={r=1, g=1, b=1},
 	hovered_font_color={r=1, g=1, b=1},
 	top_padding = 0,
@@ -217,7 +184,7 @@ default_gui.button_blkmkt_credits_style =
 	bottom_padding = 0,
 	left_padding = 0,
 	height = math.floor(36 * gui_scale),
-	scalable = false,
+
 	left_click_sound =
 	{
 		{
@@ -238,7 +205,7 @@ default_gui.sprite_main_blkmkt_style =
 	left_padding = 0,
 	height = math.floor(36 * gui_scale),
 	width = math.floor(36 * gui_scale),
-	scalable = false,
+
 }
 
 default_gui.sprite_group_blkmkt_style = 
@@ -251,7 +218,7 @@ default_gui.sprite_group_blkmkt_style =
 	left_padding = 0,
 	width = math.floor(64 * gui_scale),
 	height = math.floor(64 * gui_scale),
-	scalable = false
+
 }
 
 default_gui.sprite_obj_blkmkt_style = 
@@ -266,5 +233,5 @@ default_gui.sprite_obj_blkmkt_style =
 	width = math.floor(32 * gui_scale),
 	-- minimal_width = 32,
 	-- minimal_height = 32,
-	scalable = false
+
 }

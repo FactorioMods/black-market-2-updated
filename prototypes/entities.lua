@@ -9,7 +9,7 @@ data:extend(
 			name = "black-market-group",
 			icon = "__black-market-2-updated__/graphics/black-market-group.png",
 			icon_size = 64,
-			inventory_order = "n",
+
 			order = "n"
 		},
 		{
@@ -241,7 +241,6 @@ local function add_chests(level)
 			shift = {0.1875, 0}
 		}
 
-	
 	data:extend(
 		{
 			chest_sell,
@@ -325,7 +324,6 @@ local function add_chests(level)
 	end
 end
 
-	
 add_chests(1)
 add_chests(2)
 add_chests(3)
@@ -468,9 +466,6 @@ local function add_accus(level)
 	accu_sell.energy_source.buffer_capacity = accu_max .. "MJ"
 	accu_sell.energy_source.input_flow_limit = flow_limit .. "MW"
 	accu_sell.energy_source.output_flow_limit = "0MW"
-	accu_sell.chargable_graphics.picture.filename = "__black-market-2-updated__/graphics/trading-accumulator-sell.png"
-	accu_sell.chargable_graphics.charge_animation.filename = "__black-market-2-updated__/graphics/trading-accumulator-sell-charge.png"
-	accu_sell.chargable_graphics.discharge_animation.filename = "__black-market-2-updated__/graphics/trading-accumulator-sell-discharge.png"
 
 	data:extend(
 		{
@@ -506,9 +501,6 @@ local function add_accus(level)
 	accu_buy.energy_source.buffer_capacity = accu_max .. "MJ"
 	accu_buy.energy_source.input_flow_limit = "0MW"
 	accu_buy.energy_source.output_flow_limit = flow_limit .. "MW"
-	accu_buy.chargable_graphics.picture.filename = "__black-market-2-updated__/graphics/trading-accumulator-buy.png"
-	accu_buy.chargable_graphics.charge_animation.filename = "__black-market-2-updated__/graphics/trading-accumulator-buy-charge.png"
-	accu_buy.chargable_graphics.discharge_animation.filename = "__black-market-2-updated__/graphics/trading-accumulator-buy-discharge.png"
 
 	data:extend(
 		{
