@@ -24,15 +24,17 @@ data:extend(
 			type = "sprite",
 			name = "sprite_main_blkmkt",
 			filename = "__black-market-2-updated__/graphics/but-main.png",
-			width = math.floor(30 * gui_scale),
-			height = math.floor(30 * gui_scale),
+			width = 30,
+			height = 30,
+			scale = gui_scale,
 		},
 		{
 			type = "sprite",
 			name = "sprite_energy_blkmkt",
 			filename = "__black-market-2-updated__/graphics/energy.png",
-			width = math.floor(32 * gui_scale),
-			height = math.floor(32 * gui_scale),
+			width = 32,
+			height = 32,
+			scale = gui_scale,
 		},
 	}
 )		
