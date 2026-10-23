@@ -10,7 +10,9 @@ mod_gui = require("mod-gui")
 
 configure_settings()
 
-local table = require('__flib__.table')
+local function for_each(tbl, callback)
+    for key, value in pairs(tbl) do callback(value, key) end
+end
 -- local gui = require('__flib__.gui') -- Currently unused
 
 local trader_type = { item = 1, fluid = 2, energy = 3, "item", "fluid", "energy" }
@@ -31,7 +33,7 @@ for name, proto in pairs(prototypes.quality) do
 	quality_lookup_by_name[proto.name] = proto
 end
 
-table.sort(quality_list, function(a, b) return a.level <= b.level end)
+table.sort(quality_list, function(a, b) return a.level < b.level end)
 
 local has_quality = #quality_list > 0
 
@@ -1246,7 +1248,7 @@ local function compute_recipe_purity(recipe_name, item_name)
 	local other_amount = 0   -- the other stuff that the recipe produces
 	local ingredient_amount = 0 -- the stuff we are actually trying to solve for
 
-	table.for_each(recipe.products, function(product)
+	for_each(recipe.products, function(product)
 		-- here we categorize each of the recipes products into product or other
 		if product.name == item_name then
 			if product.amount ~= nil then
@@ -1407,13 +1409,13 @@ local function update_objects_prices()
 
 					-- or recipes with catalysts
 					local hasCatalyst = false
-					table.for_each(recipe.products, function(recipe_product)
+					for_each(recipe.products, function(recipe_product)
 						-- if the recipe just straight up tells us
 						if recipe_product.catalyst_amount ~= nil and recipe_product.catalyst_amount > 0 then
 							hasCatalyst = true
 							-- otherwise check for name matches
 						else
-							table.for_each(recipe.ingredients,
+							for_each(recipe.ingredients,
 								function(ingr) if ingr.name == recipe_product.name then hasCatalyst = true end end)
 						end
 					end)
@@ -1499,7 +1501,7 @@ end
 
 local function multiply_prices()
 	if not (settings.global["BM2-price_multiplyer"] == nil or settings.global["BM2-price_multiplyer"].value == 1) then -- no point of multiplying prices if its just by 1 or not configured at all
-		table.for_each(storage.prices,
+		for_each(storage.prices,
 			function(price) price.current = price.current * settings.global["BM2-price_multiplyer"].value end)
 	end
 end
@@ -2407,13 +2409,20 @@ local function init_players()
 end
 
 --------------------------------------------------------------------------------------
+local adopt_existing_traders
+
 local function on_init()
+	if remote.interfaces["black-market-2-migration"] then
+		storage = remote.call("black-market-2-migration", "export_storage")
+		storage.factorio_mods_imported = true
+	end
 	-- called once, the first time the mod is loaded on a game (new or existing game)
 	---gui.init()
 	---gui.build_lookup_tables()
 	init_storages()
 	init_forces()
 	init_players()
+	if not storage.factorio_mods_imported then adopt_existing_traders() end
 end
 
 script.on_init(on_init)
@@ -2638,6 +2647,21 @@ local function on_creation(event)
 			compute_trader_data(trader)
 		end
 	end
+end
+
+adopt_existing_traders = function()
+    local count = 0
+    for _, surface in pairs(game.surfaces) do
+        for _, entity in pairs(surface.find_entities_filtered{type={"container", "storage-tank", "accumulator"}}) do
+            if entity.name:find("^trader%-") then
+                on_creation{entity=entity}
+                count = count + 1
+            end
+        end
+    end
+    if count > 0 then
+        game.print("Black Market 2: Updated adopted existing trading entities. Old credits and orders require the temporary migration bridge; reload the original save with the bridge to transfer them.")
+    end
 end
 
 script.on_event(defines.events.on_built_entity, on_creation)

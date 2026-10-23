@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 2026-10-23
+  Compatibility:
+    - Declare Factorio 2.1 compatibility.
+    - Keep native Lua table functions available with current flib.
+    - Use strict quality sorting and local iteration for price calculations.
+    - Import existing credits, orders and trader storage using the optional temporary migration bridge.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.2.19
 Date: 2026-04-01
   Changes:

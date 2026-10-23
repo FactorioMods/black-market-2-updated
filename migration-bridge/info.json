@@ -1,0 +1,11 @@
+{
+  "name": "BlackMarket2",
+  "version": "2.2.20",
+  "title": "Black Market 2: migration bridge (temporary)",
+  "author": "johnmart19 / FactorioMods; original mod by djmango",
+  "factorio_version": "2.1",
+  "dependencies": [
+    "base >= 2.1.23"
+  ],
+  "description": "Temporary local bridge preserving BlackMarket2 storage while switching to black-market-2-updated. Contains no trading prototypes. Remove after saving the migrated game."
+}
