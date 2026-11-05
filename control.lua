@@ -10,12 +10,16 @@ mod_gui = require("mod-gui")
 
 configure_settings()
 
--- flib 0.17 no longer re-exports the Lua standard library from its table module,
--- and it removed `for_each`. Use the standard library and a local helper instead.
-local function for_each(tbl, fn)
-	for key, value in pairs(tbl) do
-		fn(value, key)
-	end
+local function for_each(tbl, callback)
+    for key, value in pairs(tbl) do callback(value, key) end
+end
+
+-- Expected recipe output under Factorio 2.1 independent/shared probability rules.
+local function expected_product_amount(product)
+    local amount = product.amount or ((product.amount_min + product.amount_max) / 2)
+    local shared = product.shared_probability
+    local chance = product.independent_probability * (shared.max - shared.min)
+    return (amount + (product.extra_count_fraction or 0)) * chance
 end
 
 local trader_type = { item = 1, fluid = 2, energy = 3, "item", "fluid", "energy" }
@@ -1256,20 +1260,13 @@ local function compute_recipe_purity(recipe_name, item_name)
 	local ingredient_amount = 0 -- the stuff we are actually trying to solve for
 
 	for_each(recipe.products, function(product)
-		-- here we categorize each of the recipes products into product or other
-		if product.name == item_name then
-			if product.amount ~= nil then
-				ingredient_amount = ingredient_amount + product.amount
-			elseif product.amount_min and product.amount_max and product.probability then
-				ingredient_amount = ingredient_amount +
-					(product.amount_min + product.amount_max) / 2 * product.probability
-			end
-		elseif product.amount ~= nil then -- if its an other we still need to check if its a probability or an amount
-			other_amount = other_amount + product.amount
-		elseif product.amount_min and product.amount_max and product.probability then
-			other_amount = other_amount + (product.amount_min + product.amount_max) / 2 * product.probability
-		end
-	end)
+        local amount = expected_product_amount(product)
+        if product.name == item_name then
+            ingredient_amount = ingredient_amount + amount
+        else
+            other_amount = other_amount + amount
+        end
+    end)
 
 	-- cant divide by 0
 	if other_amount == 0 then other_amount = 1 end
@@ -1356,14 +1353,10 @@ local function compute_item_cost(item_name, loops, recipes_used)
 	-- count the amount of product we are making in this recipe
 	local product_amount = 0
 	for _, product in pairs(recipe.products) do
-		if product.name == item_name then
-			if product.amount then
-				product_amount = product.amount
-			elseif product.amount_min and product.amount_max and product.probability then
-				product_amount = (product.amount_min + product.amount_max) / 2 * product.probability
-			end
-		end
-	end
+        if product.name == item_name then
+            product_amount = product_amount + expected_product_amount(product)
+        end
+    end
 
 	-- calculate energy cost
 	local energy_cost = recipe.energy * energy_cost
@@ -1437,7 +1430,7 @@ local function update_objects_prices()
 					local hasCatalyst = false
 					for_each(recipe.products, function(recipe_product)
 						-- if the recipe just straight up tells us
-						if recipe_product.catalyst_amount ~= nil and recipe_product.catalyst_amount > 0 then
+						if recipe_product.ignored_by_productivity ~= nil and recipe_product.ignored_by_productivity > 0 then
 							hasCatalyst = true
 							-- otherwise check for name matches
 						else
