@@ -1055,7 +1055,6 @@ local function build_menu_objects(player, open_or_close, ask_sel)
 			"button_blkmkt_style"
 		})
 
-
 		if ask_sel then
 			main_window.add({
 				type = "button",
@@ -2072,7 +2071,6 @@ local function buy_trader(trader, force_mem, tax_rate)
 		local order = trader.orders[1]
 		local tank = trader.entity
 
-
 		if order then
 			local name = order.name
 			local price = storage.prices[name]
@@ -2086,7 +2084,6 @@ local function buy_trader(trader, force_mem, tax_rate)
 					tank.extract_fluid({ name = fluid_name, amount = fluid_amount })
 				end
 			end
-
 
 			if price then
 				local purchased = math.min(order.count, (trader.tank_max - amount_box))
@@ -2726,7 +2723,6 @@ local function on_entity_settings_pasted(event)
 		local force_mem = storage.force_mem[ent2.force.name]
 		trader2 = find_trader_buy(force_mem, ent2)
 	end
-
 
 	if trader1 and trader2 then
 		copy_trader(trader1, trader2)
