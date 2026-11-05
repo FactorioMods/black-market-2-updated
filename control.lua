@@ -2425,13 +2425,20 @@ local function init_players()
 end
 
 --------------------------------------------------------------------------------------
+local adopt_existing_traders
+
 local function on_init()
+	if remote.interfaces["black-market-2-migration"] then
+		storage = remote.call("black-market-2-migration", "export_storage")
+		storage.factorio_mods_imported = true
+	end
 	-- called once, the first time the mod is loaded on a game (new or existing game)
 	---gui.init()
 	---gui.build_lookup_tables()
 	init_storages()
 	init_forces()
 	init_players()
+	if not storage.factorio_mods_imported then adopt_existing_traders() end
 end
 
 script.on_init(on_init)
@@ -2656,6 +2663,21 @@ local function on_creation(event)
 			compute_trader_data(trader)
 		end
 	end
+end
+
+adopt_existing_traders = function()
+    local count = 0
+    for _, surface in pairs(game.surfaces) do
+        for _, entity in pairs(surface.find_entities_filtered{type={"container", "storage-tank", "accumulator"}}) do
+            if entity.name:find("^trader%-") then
+                on_creation{entity=entity}
+                count = count + 1
+            end
+        end
+    end
+    if count > 0 then
+        game.print("Black Market 2: Updated adopted existing trading entities. Old credits and orders require the temporary migration bridge; reload the original save with the bridge to transfer them.")
+    end
 end
 
 script.on_event(defines.events.on_built_entity, on_creation)
