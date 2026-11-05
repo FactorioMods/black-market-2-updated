@@ -40,7 +40,7 @@ for name, proto in pairs(prototypes.quality) do
 	quality_lookup_by_name[proto.name] = proto
 end
 
-table.sort(quality_list, function(a, b) return a.level <= b.level end)
+table.sort(quality_list, function(a, b) return a.level < b.level end)
 
 local has_quality = #quality_list > 0
 
