@@ -36,7 +36,7 @@ Runs automatically when:
 
 1. **Lua and LuaCheck** (for linting):
    ```bash
-   # Install Lua (version 5.4 recommended)
+   # Install a Lua/LuaRocks toolchain for LuaCheck; Factorio uses its own modified Lua 5.2 runtime
    # Install LuaRocks
    luarocks install luacheck
    ```
@@ -159,12 +159,14 @@ end
 
 ## Testing
 
-While there's no automated game testing (Factorio doesn't provide a headless test environment), the validation workflow checks for:
+The validation workflow checks for:
 
 - Syntax errors
 - Common coding issues
 - Mod structure compliance
 - Version consistency
+
+Factorio also provides native headless test and benchmark modes. Use separate configuration/mod directories and copied saves; see [current validation](FACTORIO-2.1.md) and the [official command-line reference](https://wiki.factorio.com/Command_line_parameters).
 
 For manual testing:
 1. Package the mod locally

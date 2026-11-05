@@ -1,39 +1,14 @@
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.4
 Date: 2026-11-05
+  Features:
+    - Import the original mod's credits, orders and trader settings through the optional temporary migration bridge.
   Bugfixes:
-    - Merge upstream 2.2.24 circuit, pricing, blueprint order and wallet display fixes.
-    - Prevent trading blueprints, planners and remotes, including stale saved prices.
-  Changes:
-    - Remove the unused flib dependency.
-
----------------------------------------------------------------------------------------------------
-Version: 1.0.3
-Date: 2026-10-24
-  Bugfixes:
-    - Fix in-game changelog parsing.
-    - Move the original mod history to docs/UPSTREAM-CHANGELOG.txt to avoid duplicate versions and unsupported formatting.
-
----------------------------------------------------------------------------------------------------
-Version: 1.0.2
-Date: 2026-10-23
-  Bugfixes:
-    - Scale GUI sprites with the sprite scale field, retaining their actual source dimensions at every GUI scale.
-
----------------------------------------------------------------------------------------------------
-Version: 1.0.1
-Date: 2026-10-23
-  Bugfixes:
-    - Remove obsolete prototype/style fields reported unused by Factorio 2.1.
-    - Use current fluid storage reads and named-fluid extraction for tank trading.
-    - Use helpers file APIs in the debug logger.
-    - Account for independent/shared recipe probabilities and fractional output in prices.
-
----------------------------------------------------------------------------------------------------
-Version: 1.0.0
-Date: 2026-10-23
+    - Calculate prices from actual recipe output chances, ranges and fractional quantities.
+    - Use strict quality ordering for pricing and trading.
+    - Copy trader orders to the correct blueprint entities, including selections on another surface.
+    - Exclude blueprints, planners and remotes even when an older save retains prices for them.
+    - Use current fluid storage/extraction and GUI APIs; guard missing recipes and groups.
   Compatibility:
-    - Declare Factorio 2.1 compatibility.
-    - Keep native Lua table functions available with current flib.
-    - Use strict quality sorting and local iteration for price calculations.
-    - Import existing credits, orders and trader storage using the optional temporary migration bridge.
+    - Include original BlackMarket2 2.2.24 circuit, wallet and menu fixes while retaining the fork changes.
+    - Remove the unused flib dependency.

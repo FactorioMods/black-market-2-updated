@@ -2807,10 +2807,21 @@ end
 
 local function on_player_setup_blueprint(event)
 	local player = game.players[event.player_index]
-	local blueprint = player.blueprint_to_setup
-
-	if not blueprint or not blueprint.valid_for_read then
+	if not player or not player.valid then
 		return
+	end
+
+	-- Library records are writable during this event and do not have valid_for_read.
+	-- Prefer the actual event target, then use the legacy player stack fallback.
+	local blueprint = event.record
+	if not blueprint or not blueprint.valid or blueprint.type ~= "blueprint" then
+		blueprint = event.stack
+		if not blueprint or not blueprint.valid or not blueprint.valid_for_read or not blueprint.is_blueprint then
+			blueprint = player.blueprint_to_setup
+			if not blueprint or not blueprint.valid or not blueprint.valid_for_read or not blueprint.is_blueprint then
+				return
+			end
+		end
 	end
 
 	local entities = blueprint.get_blueprint_entities()
@@ -2823,49 +2834,27 @@ local function on_player_setup_blueprint(event)
 		return
 	end
 
-	-- Match against the force's own trader list instead of scanning the surface. The old
-	-- version scanned event.area, so an entity whose position did not line up with the
-	-- dragged area silently lost its orders (reports on the portal and issue #98).
-	local function find_trader(list, entity, dx, dy)
-		for _, trader in pairs(list) do
-			local ent = trader.entity
-			if ent and ent.valid and ent.name == entity.name then
-				if math.abs(ent.position.x - (entity.position.x + dx)) < 0.5 and
-					math.abs(ent.position.y - (entity.position.y + dy)) < 0.5 then
-					return trader
-				end
-			end
-		end
-		return nil
+	-- Blueprint positions are relative and remote view can select another surface.
+	-- Use the engine's exact entity-number mapping instead of guessing coordinates.
+	if not event.mapping or not event.mapping.valid then
+		return
 	end
-
-	local function is_sell_prefix(prefix)
-		return prefix == "trader-chst-sel" or prefix == "trader-tank-sel" or prefix == "trader-accu-sel"
-	end
-
-	local function is_trader_prefix(prefix)
-		return is_sell_prefix(prefix) or prefix == "trader-chst-buy" or prefix == "trader-tank-buy" or prefix == "trader-accu-buy"
-	end
-
-	-- A setup blueprint normally reports absolute positions, but a blueprint that came back
-	-- from another source can report them relative to its own origin. Try absolute first,
-	-- then offset by the selected area so either shape is found.
-	local offsets = { { 0, 0 } }
-	if event.area then
-		offsets[2] = { event.area.left_top.x, event.area.left_top.y }
+	local mapping = event.mapping.get()
+	if not mapping then
+		return
 	end
 
 	local tagged = false
 	for _, entity in pairs(entities) do
-		local prefix = string.sub(entity.name, 1, 15)
-		if is_trader_prefix(prefix) then
-			local list = is_sell_prefix(prefix) and force_mem.traders_sell or force_mem.traders_buy
+		local source = mapping[entity.entity_number]
+		if source and source.valid and source.name == entity.name and
+			source.force == player.force and source.surface == event.surface then
+			local prefix = string.sub(entity.name, 1, 15)
 			local trader = nil
-			for _, offset in pairs(offsets) do
-				trader = find_trader(list, entity, offset[1], offset[2])
-				if trader then
-					break
-				end
+			if prefix == "trader-chst-sel" or prefix == "trader-tank-sel" or prefix == "trader-accu-sel" then
+				trader = find_trader_sell(force_mem, source)
+			elseif prefix == "trader-chst-buy" or prefix == "trader-tank-buy" or prefix == "trader-accu-buy" then
+				trader = find_trader_buy(force_mem, source)
 			end
 
 			if trader then
@@ -2881,7 +2870,6 @@ local function on_player_setup_blueprint(event)
 		blueprint.set_blueprint_entities(entities)
 	end
 end
-
 
 script.on_event(defines.events.on_player_setup_blueprint, on_player_setup_blueprint)
 
