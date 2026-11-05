@@ -1839,7 +1839,7 @@ local function evaluate_trader(trader)
 	if trader.type == trader_type.item then
 		local inv = trader.entity.get_inventory(defines.inventory.chest)
 		for _, item in ipairs(inv.get_contents()) do
-			local price = is_untradeable(item.name) and nil or storage.prices[item.name]
+			local price = not is_untradeable(item.name) and storage.prices[item.name] or nil
 			if price ~= nil then
 				local quality = item.quality
 				local quality_multiplier = 1
@@ -1921,7 +1921,7 @@ local function sell_trader(trader, force_mem, tax_rate)
 	if trader.type == trader_type.item then
 		local inv = trader.entity.get_inventory(defines.inventory.chest)
 		for _, item in ipairs(inv.get_contents()) do
-			local price = is_untradeable(item.name) and nil or storage.prices[item.name]
+			local price = not is_untradeable(item.name) and storage.prices[item.name] or nil
 			if price ~= nil then
 				local quality = item.quality
 				local quality_multiplier = 1
@@ -2021,7 +2021,7 @@ local function buy_trader(trader, force_mem, tax_rate)
 		local inv = trader.entity.get_inventory(defines.inventory.chest)
 
 		for i, order in ipairs(trader.orders) do
-			local price = is_untradeable(order.name) and nil or storage.prices[order.name]
+			local price = not is_untradeable(order.name) and storage.prices[order.name] or nil
 			if price ~= nil and order.count > 0 then
 				local quality = order.quality
 				local quality_multiplier = 1
